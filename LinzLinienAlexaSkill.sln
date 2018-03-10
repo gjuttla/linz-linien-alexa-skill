@@ -1,0 +1,16 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinzLinienAlexaSkill.Web", "src\LinzLinienAlexaSkill.Web\LinzLinienAlexaSkill.Web.csproj", "{5B3B8E90-865D-4BCC-93A2-4A94DD22CB95}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{5B3B8E90-865D-4BCC-93A2-4A94DD22CB95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5B3B8E90-865D-4BCC-93A2-4A94DD22CB95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5B3B8E90-865D-4BCC-93A2-4A94DD22CB95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5B3B8E90-865D-4BCC-93A2-4A94DD22CB95}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
