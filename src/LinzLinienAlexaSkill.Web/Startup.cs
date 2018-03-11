@@ -50,8 +50,8 @@ namespace LinzLinienAlexaSkill.Web
                 var stopsService = app.ApplicationServices.GetService<IStopsService>();
                 var speechlet = new LinzLinienEfaSpeechlet(logger, departuresService, stopsService);
                 var response = await speechlet.GetResponseAsync(context.Request.ToHttpRequestMessage());
-                var responseStr = await response.Content.ReadAsStringAsync();
-                await context.Response.WriteAsync(responseStr);
+                // TODO: Set correct values for non-200 reponses
+                await context.Response.FromHttpResponseMessage(response);
             });
         }
     }
