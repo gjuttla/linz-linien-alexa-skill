@@ -1,31 +1,58 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using LinzLinienAlexaSkill.Web.Alexa;
+using LinzLinienAlexaSkill.Web.Configuration;
+using LinzLinienAlexaSkill.Web.Dao;
+using LinzLinienAlexaSkill.Web.Utility;
+using LinzLinienEfa.Service.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace LinzLinienAlexaSkill.Web
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        public IConfiguration Configuration { get; }
+        
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+        
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddOptions();
+            services.Configure<AppConfig>(Configuration.GetSection("AppConfig"));
+            
+            // Add logging
+            services.AddSingleton(new LoggerFactory()
+                .AddConsole(Configuration.GetSection("Logging"))
+                .AddDebug());
+            services.AddLogging();
+            
+            // Add services
+            services.AddSingleton<IDeparturesService, DeparturesDao>();
+            services.AddSingleton<IStopsService, StopsDao>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-
-            app.Run(async (context) => { await context.Response.WriteAsync("Hello World!"); });
+            app.Run(async (context) =>
+            {
+                var logger = app.ApplicationServices.GetService<ILogger<LinzLinienEfaSpeechlet>>();
+                var departuresService = app.ApplicationServices.GetService<IDeparturesService>();
+                var stopsService = app.ApplicationServices.GetService<IStopsService>();
+                var speechlet = new LinzLinienEfaSpeechlet(logger, departuresService, stopsService);
+                var response = await speechlet.GetResponseAsync(context.Request.ToHttpRequestMessage());
+                var responseStr = await response.Content.ReadAsStringAsync();
+                await context.Response.WriteAsync(responseStr);
+            });
         }
     }
 }
