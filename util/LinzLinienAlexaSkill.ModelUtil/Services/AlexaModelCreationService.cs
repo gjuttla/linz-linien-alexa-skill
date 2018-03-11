@@ -40,7 +40,7 @@ namespace LinzLinienAlexaSkill.ModelUtil.Services
                 }
                 catch (HttpRequestException e)
                 {
-                    logger.LogWarning($"Caught {nameof(HttpRequestException)}. No stops found for '{c}'.");
+                    logger.LogWarning($"Caught {nameof(HttpRequestException)}[msg={e.Message}]\nNo stops found for '{c}'.");
                 }
             }
             var slotValues = new JArray();
