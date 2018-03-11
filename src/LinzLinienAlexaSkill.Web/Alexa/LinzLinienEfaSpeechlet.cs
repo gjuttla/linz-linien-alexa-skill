@@ -17,6 +17,7 @@ namespace LinzLinienAlexaSkill.Web.Alexa
 {
     public class LinzLinienEfaSpeechlet : SpeechletBase, ISpeechletWithContextAsync
     {
+        // Default limit according to EFA API documentation.
         private const uint DefaultLimit = 40u;
         private readonly ILogger<LinzLinienEfaSpeechlet> logger;
         private readonly IDeparturesService departuresService;
