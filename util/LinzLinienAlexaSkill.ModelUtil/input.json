@@ -1,0 +1,98 @@
+﻿{
+  "languageModel": {
+    "types": [
+      {
+        "name": "EFA_STOP",
+        "values": [
+          {
+            "id": "asdf",
+            "name": {
+              "value": "slot value 1",
+              "synonyms": [
+                "v1s1"
+              ]
+            }
+          },
+          {
+            "id": "id2",
+            "name": {
+              "value": "slot value 2",
+              "synonyms": [
+                "v2s1",
+                "v2s2"
+              ]
+            }
+          },
+          {
+            "id": "id3",
+            "name": {
+              "value": "slot value 3",
+              "synonyms": []
+            }
+          }
+        ]
+      }
+    ],
+    "intents": [
+      {
+        "name": "AMAZON.CancelIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.HelpIntent",
+        "samples": []
+      },
+      {
+        "name": "AMAZON.StopIntent",
+        "samples": []
+      },
+      {
+        "name": "Search",
+        "samples": [
+          "Test"
+        ],
+        "slots": [
+          {
+            "name": "stopName",
+            "type": "EFA_STOP",
+            "samples": [
+              "Suche {stopName}"
+            ]
+          }
+        ]
+      }
+    ],
+    "invocationName": "linz linien"
+  },
+  "prompts": [
+    {
+      "id": "Elicit.Intent-Search.IntentSlot-stopName",
+      "variations": [
+        {
+          "type": "PlainText",
+          "value": "Von wo?"
+        }
+      ]
+    }
+  ],
+  "dialog": {
+    "intents": [
+      {
+        "name": "Search",
+        "confirmationRequired": false,
+        "prompts": {},
+        "slots": [
+          {
+            "name": "stopName",
+            "type": "EFA_STOP",
+            "elicitationRequired": true,
+            "confirmationRequired": false,
+            "prompts": {
+              "elicitation": "Elicit.Intent-Search.IntentSlot-stopName"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
