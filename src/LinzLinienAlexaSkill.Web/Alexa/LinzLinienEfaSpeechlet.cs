@@ -18,7 +18,10 @@ namespace LinzLinienAlexaSkill.Web.Alexa
     public class LinzLinienEfaSpeechlet : SpeechletBase, ISpeechletWithContextAsync
     {
         // Default limit according to EFA API documentation.
-        private const uint DefaultLimit = 40u;
+        private const uint GetDeparturesForStopDefaultLimit = 40u;
+        // Default number of departures for Alexa speech response.
+        private const uint NumberOfDepartures = 3u;
+        
         private readonly ILogger<LinzLinienEfaSpeechlet> logger;
         private readonly IDeparturesService departuresService;
         private readonly IStopsService stopsService;
@@ -46,7 +49,7 @@ namespace LinzLinienAlexaSkill.Web.Alexa
                     return await GetNextDepartureByTypeAsync(intent, TransportationMean.Bus);
 
                 case "NextDeparturesFromStop":
-                    return await GetNextDeparturesFromStopAsync(intent, 3);
+                    return await GetNextDeparturesFromStopAsync(intent, NumberOfDepartures);
 
                 default:
                     logger.LogError("OnIntentAsync: Invalid Intent");
@@ -118,7 +121,9 @@ namespace LinzLinienAlexaSkill.Web.Alexa
             if (originStops.Count > 0)
             {
                 var originStop = originStops.First();
-                var departures = await departuresService.GetDeparturesForStopAsync(originStop.Id, DefaultLimit);
+                var departures = await departuresService.GetDeparturesForStopAsync(
+                                                            originStop.Id, 
+                                                            GetDeparturesForStopDefaultLimit);
                 if (departures.Count > 0)
                 {
                     var filteredDepartures = departures
@@ -144,7 +149,9 @@ namespace LinzLinienAlexaSkill.Web.Alexa
             if (originStops.Count > 0)
             {
                 var originStop = originStops.First();
-                var departures = await departuresService.GetDeparturesForStopAsync(originStop.Id, DefaultLimit);
+                var departures = await departuresService.GetDeparturesForStopAsync(
+                                                            originStop.Id, 
+                                                            GetDeparturesForStopDefaultLimit);
                 if (departures.Count > 0)
                 {
                     var filteredDepartures = departures
@@ -169,7 +176,9 @@ namespace LinzLinienAlexaSkill.Web.Alexa
             if (originStops.Count > 0)
             {
                 var originStop = originStops.First();
-                var departures = (await departuresService.GetDeparturesForStopAsync(originStop, DefaultLimit)) as List<Departure>;
+                var departures = (await departuresService.GetDeparturesForStopAsync(
+                                                            originStop, 
+                                                            GetDeparturesForStopDefaultLimit)) as List<Departure>;
                 if (departures.Count > 0 && departures.Count >= count)
                 {
                     var response = $"Hier sind die nächsten {count} Abfahrten von {originStop.Name}.";
