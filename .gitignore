@@ -1,3 +1,7 @@
+# Ignore LinzLinienAlexaSkill.ModelUtil output files
+output.json
+valuesArray_output.json
+
 # Created by https://www.gitignore.io/api/linux,macos,csharp,windows,intellij,visualstudio,visualstudiocode
 
 ### Csharp ###

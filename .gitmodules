@@ -1,0 +1,3 @@
+[submodule "lib/linz-linien-efa"]
+	path = lib/linz-linien-efa
+	url = git@github.com:gjuttla/linz-linien-efa.git
