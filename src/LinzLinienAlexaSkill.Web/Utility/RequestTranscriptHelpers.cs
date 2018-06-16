@@ -21,7 +21,7 @@ namespace LinzLinienAlexaSkill.Web.Utility
             {
                 Scheme = req.Scheme,
                 Host = req.Host.Host,
-                Port = req.Host.Port.Value,
+                Port = req.Host.Port ?? default(int),
                 Path = req.PathBase.Add(req.Path),
                 Query = req.QueryString.ToString()
             }.Uri);
