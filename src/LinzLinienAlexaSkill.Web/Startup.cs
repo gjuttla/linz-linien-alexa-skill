@@ -5,6 +5,7 @@ using LinzLinienAlexaSkill.Web.Utility;
 using LinzLinienEfa.Service.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -42,16 +43,8 @@ namespace LinzLinienAlexaSkill.Web
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.Run(async (context) =>
-            {
-                var logger = app.ApplicationServices.GetService<ILogger<LinzLinienEfaSpeechlet>>();
-                var departuresService = app.ApplicationServices.GetService<IDeparturesService>();
-                var stopsService = app.ApplicationServices.GetService<IStopsService>();
-                var speechlet = new LinzLinienEfaSpeechlet(logger, departuresService, stopsService);
-                var response = await speechlet.GetResponseAsync(context.Request.ToHttpRequestMessage());
-                // TODO: Set correct values for non-200 reponses
-                await context.Response.FromHttpResponseMessage(response);
-            });
+            app.UseAlexaSkillMiddleware("/alexa");
+            app.Run(async context => await context.Response.WriteAsync("Hello there!"));
         }
     }
 }
