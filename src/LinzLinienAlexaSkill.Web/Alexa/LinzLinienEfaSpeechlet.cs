@@ -35,7 +35,7 @@ namespace LinzLinienAlexaSkill.Web.Alexa
 
         public async Task<SpeechletResponse> OnIntentAsync(IntentRequest intentRequest, Session session, Context context)
         {
-            logger.LogInformation($"OnIntentAsync requestId={intentRequest.RequestId}, sessionId={session.SessionId}");
+            logger.LogDebug($"OnIntentAsync requestId={intentRequest.RequestId}, sessionId={session.SessionId}");
             var intent = intentRequest.Intent;
             switch (intent.Name)
             {
@@ -61,19 +61,19 @@ namespace LinzLinienAlexaSkill.Web.Alexa
         {
             return Task.Run(() =>
             {
-                logger.LogInformation($"OnLaunchAsync requestId={launchRequest.RequestId}, sessionId={session.SessionId}");
+                logger.LogDebug($"OnLaunchAsync requestId={launchRequest.RequestId}, sessionId={session.SessionId}");
                 return CreateSpeechletResponse(Responses.WelcomeText, shouldEndSession: false);
             });
         }
 
         public Task OnSessionStartedAsync(SessionStartedRequest sessionStartedRequest, Session session, Context context)
         {
-            return Task.Run(() => logger.LogInformation($"OnSessionStartedAsync requestId={sessionStartedRequest.RequestId}, sessionId={session.SessionId}"));
+            return Task.Run(() => logger.LogDebug($"OnSessionStartedAsync requestId={sessionStartedRequest.RequestId}, sessionId={session.SessionId}"));
         }
 
         public Task OnSessionEndedAsync(SessionEndedRequest sessionEndedRequest, Session session, Context context)
         {
-            return Task.Run(() => logger.LogInformation($"OnSessionEndedAsync requestId={sessionEndedRequest.RequestId}, sessionId={session.SessionId}"));
+            return Task.Run(() => logger.LogDebug($"OnSessionEndedAsync requestId={sessionEndedRequest.RequestId}, sessionId={session.SessionId}"));
         }
 
         public override bool OnRequestValidation(SpeechletRequestValidationResult result,
@@ -106,17 +106,18 @@ namespace LinzLinienAlexaSkill.Web.Alexa
             else
             {
                 var diff = referenceTimeUtc - requestEnvelope.Request.Timestamp;
-                Debug.WriteLine("Alexa request timestamped '{0:0.00}' seconds ago.", diff.TotalSeconds);
+                logger.LogDebug("Alexa request timestamped '{0:0.00}' seconds ago.", diff.TotalSeconds);
                 return true;
             }
         }
 
         private async Task<SpeechletResponse> GetNextDepartureByLineAsync(Intent intent)
         {
+            logger.LogTrace($"Enter {nameof(GetNextDepartureByLineAsync)}");
             var lineNr = intent.Slots["lineNr"].Value;
             var originStopName = intent.Slots["originStopName"].Value.ToLower();
             var finalDestinationStopName = intent.Slots["finalDestinationStopName"].Value.ToLower();
-            logger.LogInformation($"NextLineDepartureFromStop: lineNr={lineNr}, originStopName={originStopName}, finalDestinationStopName={finalDestinationStopName}");
+            logger.LogDebug($"NextLineDepartureFromStop: lineNr={lineNr}, originStopName={originStopName}, finalDestinationStopName={finalDestinationStopName}");
             var originStops = await stopsService.FindStopsByNameAsync(originStopName);
             if (originStops.Count > 0)
             {
@@ -132,19 +133,23 @@ namespace LinzLinienAlexaSkill.Web.Alexa
                         .ToList();
                     if (filteredDepartures.Count > 0)
                     {
+                        logger.LogTrace($"Exit {nameof(GetNextDepartureByLineAsync)} (departure found)");
                         return CreateSpeechletResponse(Responses.NextDepartureText(originStop, filteredDepartures.First()));
                     }
+                    logger.LogTrace($"Exit {nameof(GetNextDepartureByLineAsync)} (no departures found)");
                     return CreateSpeechletResponse(Responses.NoDepartuesFoundForCriteriaText);
                 }
             }
+            logger.LogTrace($"Exit {nameof(GetNextDepartureByLineAsync)} (stop not found)");
             return CreateSpeechletResponse(Responses.StopNotFoundText(originStopName));
         }
 
         private async Task<SpeechletResponse> GetNextDepartureByTypeAsync(Intent intent, TransportationMean type)
         {
+            logger.LogTrace($"Enter {nameof(GetNextDepartureByTypeAsync)}");
             var originStopName = intent.Slots["originStopName"].Value.ToLower();
             var finalDestinationStopName = intent.Slots["finalDestinationStopName"].Value.ToLower();
-            logger.LogInformation($"Next{type}DepartureFromStop: originStopName={originStopName}, finalDestinationStopName={finalDestinationStopName}");
+            logger.LogDebug($"Next{type}DepartureFromStop: originStopName={originStopName}, finalDestinationStopName={finalDestinationStopName}");
             var originStops = await stopsService.FindStopsByNameAsync(originStopName);
             if (originStops.Count > 0)
             {
@@ -160,18 +165,22 @@ namespace LinzLinienAlexaSkill.Web.Alexa
                         .ToList();
                     if (filteredDepartures.Count > 0)
                     {
+                        logger.LogTrace($"Exit {nameof(GetNextDepartureByTypeAsync)} (departure found)");
                         return CreateSpeechletResponse(Responses.NextDepartureText(originStop, filteredDepartures.First()));
                     }
+                    logger.LogTrace($"Exit {nameof(GetNextDepartureByTypeAsync)} (no departures found)");
                     return CreateSpeechletResponse(Responses.NoDepartuesFoundForCriteriaText);
                 }
             }
+            logger.LogTrace($"Exit {nameof(GetNextDepartureByTypeAsync)} (stop not found)");
             return CreateSpeechletResponse(Responses.StopNotFoundText(originStopName));
         }
 
         private async Task<SpeechletResponse> GetNextDeparturesFromStopAsync(Intent intent, uint count)
         {
+            logger.LogTrace($"Enter {nameof(GetNextDeparturesFromStopAsync)}");
             var originStopName = intent.Slots["originStopName"].Value.ToLower();
-            logger.LogInformation($"NextDeparturesFromStop: originStopName={originStopName}");
+            logger.LogDebug($"NextDeparturesFromStop: originStopName={originStopName}");
             var originStops = await stopsService.FindStopsByNameAsync(originStopName);
             if (originStops.Count > 0)
             {
@@ -186,10 +195,13 @@ namespace LinzLinienAlexaSkill.Web.Alexa
                     {
                         response = $"{response} {Responses.DepartureText(departures[i])}";
                     }
+                    logger.LogTrace($"Exit {nameof(GetNextDeparturesFromStopAsync)} (departures found)");
                     return CreateSpeechletResponse(response);
                 }
+                logger.LogTrace($"Exit {nameof(GetNextDeparturesFromStopAsync)} (no departures found)");
                 return CreateSpeechletResponse(Responses.NoDepartuesFoundForCriteriaText);
             }
+            logger.LogTrace($"Exit {nameof(GetNextDeparturesFromStopAsync)} (stop not found)");
             return CreateSpeechletResponse(Responses.StopNotFoundText(originStopName));
         }
 
