@@ -16,11 +16,6 @@
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
   <ItemGroup>
-    <Reference Include="AlexaSkillsKit, Version=1.6.0.0, Culture=neutral, PublicKeyToken=null">
-      <HintPath>..\..\lib\AlexaSkillsKit_net45_Release\AlexaSkillsKit.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\..\lib\linz-linien-efa\src\LinzLinienEfa.Domain\LinzLinienEfa.Domain.csproj" />
     <ProjectReference Include="..\..\lib\linz-linien-efa\src\LinzLinienEfa.Service.Common\LinzLinienEfa.Service.Common.csproj" />
   </ItemGroup>
