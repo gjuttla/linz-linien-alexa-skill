@@ -47,12 +47,15 @@ namespace LinzLinienAlexaSkill.Web.Alexa
         {
             if (skillRequest.GetRequestType() == typeof(LaunchRequest))
             {
+                logger.LogDebug($"Handling {nameof(LaunchRequest)}");
                 return CreateLaunchRequestResponse();
             }
             if (skillRequest.GetRequestType() == typeof(IntentRequest))
             {
+                logger.LogDebug($"Handling {nameof(IntentRequest)}");
                 return await CreateIntentRequestResponseAsync(skillRequest.Request as IntentRequest);
             }
+            logger.LogWarning($"Encountered unknown {nameof(SkillRequest)}");
             return CreateErrorResponse();
         }
 
@@ -83,24 +86,29 @@ namespace LinzLinienAlexaSkill.Web.Alexa
                 case "NextDeparturesFromStop":
                     return await CreateResponseForDeparturesFromStopRequestAsync(intentRequest, NumberOfDepartures);
             }
+            logger.LogWarning($"Encountered unknown {nameof(IntentRequest)}");
             return CreateErrorResponse();
         }
 
         private async Task<SkillResponse> CreateResponseForDepartureByLineRequestAsync(IntentRequest intentRequest)
         {
+            logger.LogTrace($"Enter {nameof(CreateResponseForDepartureByLineRequestAsync)}");
             var originStopName = intentRequest.Intent.Slots["originStopName"].Value.ToLower();
             var originStop = await FindStopByNameAsync(originStopName);
             if (originStop == null)
             {
+                logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} (stop not found)");
                 return CreateStopNotFoundResponse(originStopName);
             }
             
             var lineNr = intentRequest.Intent.Slots["lineNr"].Value;
             var finalDestinationStopName = intentRequest.Intent.Slots["finalDestinationStopName"].Value.ToLower();
+            logger.LogDebug($"NextLineDepartureFromStop: lineNr={lineNr}, originStopName={originStopName}, finalDestinationStopName={finalDestinationStopName}");
             
             var departures = await departuresService.GetDeparturesForStopAsync(originStop, GetDeparturesForStopDefaultLimit);
             if (departures.Count <= 0)
             {
+                logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} (departures.Count <= 0)");
                 return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
             }
             
@@ -108,27 +116,33 @@ namespace LinzLinienAlexaSkill.Web.Alexa
                 .FilterByFinalDestination(finalDestinationStopName)
                 .FilterByLine(lineNr)
                 .ToList();
-            if (filteredDepartures.Count > 0)
+            if (filteredDepartures.Count <= 0)
             {
-                return SkillResponseUtil.CreatePlainTextResponse(Responses.NextDepartureText(originStop, filteredDepartures[0]));
+                logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} (filteredDepartures.Count <= 0)");
+                return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
             }
-            return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
+            logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} [ok]");
+            return SkillResponseUtil.CreatePlainTextResponse(Responses.NextDepartureText(originStop, filteredDepartures[0]));
         }
         
         private async Task<SkillResponse> CreateResponseForDepartureByTypeRequestAsync(IntentRequest intentRequest, TransportationMean type)
         {
+            logger.LogTrace($"Enter {nameof(CreateResponseForDepartureByTypeRequestAsync)}");
             var originStopName = intentRequest.Intent.Slots["originStopName"].Value.ToLower();
             var originStop = await FindStopByNameAsync(originStopName);
             if (originStop == null)
             {
+                logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByTypeRequestAsync)} (stop not found)");
                 return CreateStopNotFoundResponse(originStopName);
             }
             
             var finalDestinationStopName = intentRequest.Intent.Slots["finalDestinationStopName"].Value.ToLower();
+            logger.LogDebug($"Next{type}DepartureFromStop: originStopName={originStopName}, finalDestinationStopName={finalDestinationStopName}");
             
             var departures = await departuresService.GetDeparturesForStopAsync(originStop, GetDeparturesForStopDefaultLimit);
             if (departures.Count <= 0)
             {
+                logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByTypeRequestAsync)} (departures.Count <= 0)");
                 return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
             }
             
@@ -136,21 +150,26 @@ namespace LinzLinienAlexaSkill.Web.Alexa
                 .FilterByFinalDestination(finalDestinationStopName)
                 .FilterByType(type)
                 .ToList();
-            if (filteredDepartures.Count > 0)
+            if (filteredDepartures.Count <= 0)
             {
-                return SkillResponseUtil.CreatePlainTextResponse(Responses.NextDepartureText(originStop, filteredDepartures[0]));
+                logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByTypeRequestAsync)} (filteredDepartures.Count <= 0)");
+                return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
             }
-            return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
+            logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByTypeRequestAsync)} [ok]");
+            return SkillResponseUtil.CreatePlainTextResponse(Responses.NextDepartureText(originStop, filteredDepartures[0]));
         }
         
         private async Task<SkillResponse> CreateResponseForDeparturesFromStopRequestAsync(IntentRequest intentRequest, uint count)
         {
+            logger.LogTrace($"Enter {nameof(CreateResponseForDeparturesFromStopRequestAsync)}");
             var originStopName = intentRequest.Intent.Slots["originStopName"].Value.ToLower();
             var originStop = await FindStopByNameAsync(originStopName);
             if (originStop == null)
             {
+                logger.LogTrace($"Exit {nameof(CreateResponseForDeparturesFromStopRequestAsync)} (stop not found)");
                 return CreateStopNotFoundResponse(originStopName);
             }
+            logger.LogDebug($"NextDeparturesFromStop: originStopName={originStopName}");
             
             var departures = (await departuresService.GetDeparturesForStopAsync(originStop, GetDeparturesForStopDefaultLimit)) as List<Departure>;
             if (departures.Count > 0 && departures.Count >= count)
@@ -160,8 +179,10 @@ namespace LinzLinienAlexaSkill.Web.Alexa
                 {
                     response = $"{response} {Responses.DepartureText(departures[i])}";
                 }
+                logger.LogTrace($"Exit {nameof(CreateResponseForDeparturesFromStopRequestAsync)} [ok]");
                 return SkillResponseUtil.CreatePlainTextResponse(response);
             }
+            logger.LogTrace($"Exit {nameof(CreateResponseForDeparturesFromStopRequestAsync)} (no departures)");
             return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
         }
 
