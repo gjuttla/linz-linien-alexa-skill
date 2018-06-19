@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using System.IO;
+using System.Threading.Tasks;
+using Alexa.NET.Request;
+using Alexa.NET.Response;
 using LinzLinienAlexaSkill.Web.Alexa;
-using LinzLinienAlexaSkill.Web.Utility;
-using LinzLinienEfa.Service.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 
 namespace LinzLinienAlexaSkill.Web
 {
@@ -16,12 +18,24 @@ namespace LinzLinienAlexaSkill.Web
             this.next = next;
         }
         
-        public async Task InvokeAsync(HttpContext context, ILogger<AlexaSkillMiddleware> logger, IDeparturesService departuresService, IStopsService stopsService, ILogger<LinzLinienEfaSpeechlet> speechletLogger)
+        public async Task InvokeAsync(HttpContext context, ILogger<AlexaSkillMiddleware> logger, SkillRequestHandler skillRequestHandler)
         {
-            var speechlet = new LinzLinienEfaSpeechlet(speechletLogger, departuresService, stopsService);
-            var response = await speechlet.GetResponseAsync(context.Request.ToHttpRequestMessage());
-            // TODO: Set correct values for non-200 reponses
-            await context.Response.FromHttpResponseMessage(response);
+            logger.LogTrace($"Converting HTTP request body to {nameof(SkillRequest)}");
+            string bodyStr;
+            using (var reader = new StreamReader(context.Request.Body))
+            {
+                bodyStr = reader.ReadToEnd();
+            } 
+            var skillRequest = JsonConvert.DeserializeObject<SkillRequest>(bodyStr);
+            logger.LogTrace($"Converted HTTP request body to {nameof(SkillRequest)}");
+            
+            logger.LogTrace($"Passing {nameof(SkillRequest)} to {nameof(SkillRequestHandler)}");
+            var skillResponse = await skillRequestHandler.HandleRequestAsync(skillRequest);
+            logger.LogTrace($"Got {nameof(SkillResponse)} from {nameof(SkillRequestHandler)}");
+            
+            logger.LogTrace($"Serializing {nameof(SkillResponse)} to JSON");
+            await context.Response.WriteAsync(JsonConvert.SerializeObject(skillResponse));
+            logger.LogTrace($"Wrote {nameof(SkillResponse)} as JSON in HTTP response");
         }
     }
 }
