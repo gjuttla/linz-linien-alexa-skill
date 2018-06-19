@@ -1,7 +1,6 @@
 ﻿using LinzLinienAlexaSkill.Web.Alexa;
 using LinzLinienAlexaSkill.Web.Configuration;
 using LinzLinienAlexaSkill.Web.Dao;
-using LinzLinienAlexaSkill.Web.Utility;
 using LinzLinienEfa.Service.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +34,7 @@ namespace LinzLinienAlexaSkill.Web
             // Add services
             services.AddSingleton<IDeparturesService, DeparturesDao>();
             services.AddSingleton<IStopsService, StopsDao>();
+            services.AddSingleton<SkillRequestHandler>();
         }
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
