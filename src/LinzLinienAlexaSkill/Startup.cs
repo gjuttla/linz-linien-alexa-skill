@@ -1,6 +1,6 @@
-﻿using LinzLinienAlexaSkill.Web.Alexa;
-using LinzLinienAlexaSkill.Web.Configuration;
-using LinzLinienAlexaSkill.Web.Dao;
+﻿using LinzLinienAlexaSkill.Alexa;
+using LinzLinienAlexaSkill.Configuration;
+using LinzLinienAlexaSkill.Dao;
 using LinzLinienEfa.Service.Common;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-namespace LinzLinienAlexaSkill.Web
+namespace LinzLinienAlexaSkill
 {
     public class Startup
     {

@@ -2,7 +2,7 @@
 
 namespace LinzLinienAlexaSkill.ModelUtil.Configuration
 {
-    public class AppConfig : LinzLinienAlexaSkill.Web.Configuration.AppConfig, IAppConfig
+    public class AppConfig : LinzLinienAlexaSkill.Configuration.AppConfig, IAppConfig
     {
         public string InputFile { get; set; }
         public string OutputFile { get; set; }

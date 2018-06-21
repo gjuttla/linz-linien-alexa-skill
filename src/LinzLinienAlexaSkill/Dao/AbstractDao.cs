@@ -3,7 +3,7 @@ using System.Net.Http.Headers;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 
-namespace LinzLinienAlexaSkill.Web.Dao
+namespace LinzLinienAlexaSkill.Dao
 {
     public abstract class AbstractDao
     {

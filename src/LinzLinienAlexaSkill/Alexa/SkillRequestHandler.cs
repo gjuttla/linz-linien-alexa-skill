@@ -4,12 +4,12 @@ using System.Threading.Tasks;
 using Alexa.NET.Request;
 using Alexa.NET.Request.Type;
 using Alexa.NET.Response;
-using LinzLinienAlexaSkill.Web.Extensions;
+using LinzLinienAlexaSkill.Dao;
 using LinzLinienEfa.Domain;
 using LinzLinienEfa.Service.Common;
 using Microsoft.Extensions.Logging;
 
-namespace LinzLinienAlexaSkill.Web.Alexa
+namespace LinzLinienAlexaSkill.Alexa
 {
     public class SkillRequestHandler
     {
