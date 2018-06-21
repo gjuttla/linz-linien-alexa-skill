@@ -39,16 +39,11 @@ namespace LinzLinienAlexaSkill
 
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            var alexaPath = "/alexa";
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
             }
-            else
-            {
-                app.UseAlexaSkillRequestVerificationMiddleware(alexaPath);    
-            }
-            app.UseAlexaSkillMiddleware(alexaPath);
+            app.UseAlexaSkillMiddleware("/alexa");
             app.Run(async context => await context.Response.WriteAsync("Hello there!"));
         }
     }
