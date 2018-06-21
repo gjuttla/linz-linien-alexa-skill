@@ -1,4 +1,5 @@
-﻿using LinzLinienAlexaSkill.Alexa;
+﻿using Alexa.NET.Security.Middleware;
+using LinzLinienAlexaSkill.Alexa;
 using LinzLinienAlexaSkill.Configuration;
 using LinzLinienAlexaSkill.Dao;
 using LinzLinienEfa.Service.Common;
@@ -42,6 +43,10 @@ namespace LinzLinienAlexaSkill
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+            }
+            else
+            {
+                app.UseAlexaRequestValidation();    
             }
             app.UseAlexaSkillMiddleware("/alexa");
             app.Run(async context => await context.Response.WriteAsync("Hello there!"));
