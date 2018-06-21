@@ -24,6 +24,11 @@ namespace LinzLinienAlexaSkill.Alexa
                 bodyStr = reader.ReadToEnd();
             } 
             var skillRequest = JsonConvert.DeserializeObject<SkillRequest>(bodyStr);
+            if (skillRequest == null)
+            {
+                context.Response.StatusCode = StatusCodes.Status400BadRequest;
+                return;
+            }
             var skillResponse = await skillRequestHandler.HandleRequestAsync(skillRequest);
             await context.Response.WriteAsync(JsonConvert.SerializeObject(skillResponse));
         }
