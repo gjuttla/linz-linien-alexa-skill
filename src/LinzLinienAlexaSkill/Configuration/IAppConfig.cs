@@ -1,4 +1,4 @@
-﻿namespace LinzLinienAlexaSkill.Web.Configuration
+﻿namespace LinzLinienAlexaSkill.Configuration
 {
     public interface IAppConfig
     {

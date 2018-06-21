@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 
-namespace LinzLinienAlexaSkill.Web
+namespace LinzLinienAlexaSkill
 {
     public class Program
     {

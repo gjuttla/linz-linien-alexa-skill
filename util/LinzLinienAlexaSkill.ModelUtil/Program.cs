@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using LinzLinienAlexaSkill.ModelUtil.Configuration;
 using LinzLinienAlexaSkill.ModelUtil.Services;
-using LinzLinienAlexaSkill.Web.Dao;
+using LinzLinienAlexaSkill.Dao;
 using LinzLinienEfa.Service.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -43,7 +43,7 @@ namespace LinzLinienAlexaSkill.ModelUtil
             var options = sp.GetService<IOptions<AppConfig>>();
             
             // Add services
-            serviceCollection.AddSingleton<IOptions<LinzLinienAlexaSkill.Web.Configuration.AppConfig>>(o => options);
+            serviceCollection.AddSingleton<IOptions<LinzLinienAlexaSkill.Configuration.AppConfig>>(o => options);
             serviceCollection.AddTransient<IStopsService, StopsDao>();
             serviceCollection.AddTransient<IAlexaModelCreationService, AlexaModelCreationService>();
             

@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace LinzLinienAlexaSkill.Web.Alexa
+namespace LinzLinienAlexaSkill.Alexa
 {
     public class AlexaSkillMiddleware
     {

@@ -2,7 +2,7 @@
 using System.Linq;
 using LinzLinienEfa.Domain;
 
-namespace LinzLinienAlexaSkill.Web.Dao
+namespace LinzLinienAlexaSkill.Dao
 {
     internal static class DeparturesFiltering
     {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Builder;
 
-namespace LinzLinienAlexaSkill.Web.Alexa
+namespace LinzLinienAlexaSkill.Alexa
 {
     public static class AlexaSkillMiddlewareExtensions
     {
