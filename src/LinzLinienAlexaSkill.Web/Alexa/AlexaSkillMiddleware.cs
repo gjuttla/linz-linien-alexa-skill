@@ -2,12 +2,11 @@
 using System.Threading.Tasks;
 using Alexa.NET.Request;
 using Alexa.NET.Response;
-using LinzLinienAlexaSkill.Web.Alexa;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
-namespace LinzLinienAlexaSkill.Web
+namespace LinzLinienAlexaSkill.Web.Alexa
 {
     public class AlexaSkillMiddleware
     {

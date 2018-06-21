@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Alexa.NET.Request;
 using Alexa.NET.Request.Type;
 using Alexa.NET.Response;
-using LinzLinienAlexaSkill.Web.Extensions;
+using LinzLinienAlexaSkill.Web.Dao;
 using LinzLinienEfa.Domain;
 using LinzLinienEfa.Service.Common;
 using Microsoft.Extensions.Logging;
