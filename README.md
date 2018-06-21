@@ -52,6 +52,8 @@ This project is licensed under the MIT license. See the [LICENSE](LICENSE) file 
 ## Acknowledgments
 * The public transport [data](https://www.data.gv.at/katalog/dataset/9faa1734-607f-4bfd-b8c9-c5692bf37d55) by the city Linz is licensed under [CC BY 3.0 AT](https://creativecommons.org/licenses/by/3.0/at/deed.en).  
 * The [Alexa Skills SDK for .NET](https://github.com/timheuer/alexa-skills-dotnet) by Tim Heuer is licensed under [MIT](https://github.com/timheuer/alexa-skills-dotnet/blob/master/LICENSE).
+* The [Alexa.NET.Security](https://github.com/ThomasPe/Alexa.NET.Security) library by Thomas Pentenrieder is licensed under [MIT](https://github.com/ThomasPe/Alexa.NET.Security/blob/master/LICENSE).  
+  (For the usage, the validation code had to be copied into my Alexa Skill request handling middleware.)
 * The bus stop icon for this Skill by [Freepik](http://www.freepik.com) from [www.flaticon.com](https://www.flaticon.com/) is licensed under [CC 3.0 BY](http://creativecommons.org/licenses/by/3.0/).
 
 ## Build Status
