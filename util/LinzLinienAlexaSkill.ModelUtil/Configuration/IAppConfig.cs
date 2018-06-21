@@ -2,7 +2,7 @@
 
 namespace LinzLinienAlexaSkill.ModelUtil.Configuration
 {
-    public interface IAppConfig : LinzLinienAlexaSkill.Web.Configuration.IAppConfig
+    public interface IAppConfig : LinzLinienAlexaSkill.Configuration.IAppConfig
     {
         string InputFile { get; }
         string OutputFile { get; }

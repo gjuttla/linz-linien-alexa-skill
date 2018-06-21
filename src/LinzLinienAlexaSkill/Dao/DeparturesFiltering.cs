@@ -2,9 +2,9 @@
 using System.Linq;
 using LinzLinienEfa.Domain;
 
-namespace LinzLinienAlexaSkill.Web.Extensions
+namespace LinzLinienAlexaSkill.Dao
 {
-    internal static class DepartureFiltering
+    internal static class DeparturesFiltering
     {
         internal static IEnumerable<Departure> FilterByLine(this IEnumerable<Departure> departures, string line)
         {

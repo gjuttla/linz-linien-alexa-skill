@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using LinzLinienAlexaSkill.Web.Configuration;
+using LinzLinienAlexaSkill.Configuration;
 using LinzLinienEfa.Domain;
 using LinzLinienEfa.Service.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json;
 
-namespace LinzLinienAlexaSkill.Web.Dao
+namespace LinzLinienAlexaSkill.Dao
 {
     public class StopsDao : AbstractDao, IStopsService
     {

@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinzLinienAlexaSkill.Web", "src\LinzLinienAlexaSkill.Web\LinzLinienAlexaSkill.Web.csproj", "{5B3B8E90-865D-4BCC-93A2-4A94DD22CB95}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LinzLinienAlexaSkill", "src\LinzLinienAlexaSkill\LinzLinienAlexaSkill.csproj", "{5B3B8E90-865D-4BCC-93A2-4A94DD22CB95}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{DE32BA10-B35F-4B29-969A-CBA779421B5A}"
 EndProject

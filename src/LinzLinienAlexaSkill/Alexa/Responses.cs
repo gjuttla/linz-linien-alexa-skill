@@ -1,6 +1,6 @@
 ﻿using LinzLinienEfa.Domain;
 
-namespace LinzLinienAlexaSkill.Web.Alexa
+namespace LinzLinienAlexaSkill.Alexa
 {
     public static class Responses
     {
