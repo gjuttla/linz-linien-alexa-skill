@@ -44,7 +44,10 @@ namespace LinzLinienAlexaSkill
             {
                 app.UseDeveloperExceptionPage();
             }
-            app.UseAlexaRequestValidation();
+            else
+            {
+                app.UseAlexaRequestValidation();    
+            }
             app.UseAlexaSkillMiddleware("/alexa");
             app.Run(async context => await context.Response.WriteAsync("Hello there!"));
         }
