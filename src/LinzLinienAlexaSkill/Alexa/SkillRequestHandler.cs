@@ -8,6 +8,7 @@ using LinzLinienAlexaSkill.Dao;
 using LinzLinienEfa.Domain;
 using LinzLinienEfa.Service.Common;
 using Microsoft.Extensions.Logging;
+using static LinzLinienAlexaSkill.Alexa.SkillResponseUtil;
 
 namespace LinzLinienAlexaSkill.Alexa
 {
@@ -63,7 +64,7 @@ namespace LinzLinienAlexaSkill.Alexa
 
         private SkillResponse CreateLaunchRequestResponse()
         {
-            return SkillResponseUtil.CreatePlainTextResponse(Responses.WelcomeText);
+            return CreatePlainTextResponse(Responses.WelcomeText);
         }
 
         #endregion
@@ -93,23 +94,42 @@ namespace LinzLinienAlexaSkill.Alexa
         private async Task<SkillResponse> CreateResponseForDepartureByLineRequestAsync(IntentRequest intentRequest)
         {
             logger.LogTrace($"Enter {nameof(CreateResponseForDepartureByLineRequestAsync)}");
-            var originStopName = intentRequest.Intent.Slots["originStopName"].Value.ToLower();
+            
+            var originStopName = intentRequest.TryGetSlotValue("originStopName");
+            if (originStopName == null)
+            {
+                logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} (no slot value for {nameof(originStopName)})");
+                return CreatePlainTextResponse(Responses.NoSlotValueFor("die Abfahrtshaltestelle"));
+            }
+            
             var originStop = await FindStopByNameAsync(originStopName);
             if (originStop == null)
             {
                 logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} (stop not found)");
                 return CreateStopNotFoundResponse(originStopName);
             }
+                       
+            var lineNr = intentRequest.TryGetSlotValue("lineNr");
+            if (lineNr == null)
+            {
+                logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} (no slot value for {nameof(lineNr)})");
+                return CreatePlainTextResponse(Responses.NoSlotValueFor("die Liniennummer"));
+            }
             
-            var lineNr = intentRequest.Intent.Slots["lineNr"].Value;
-            var finalDestinationStopName = intentRequest.Intent.Slots["finalDestinationStopName"].Value.ToLower();
+            var finalDestinationStopName = intentRequest.TryGetSlotValue("finalDestinationStopName");
+            if (finalDestinationStopName == null)
+            {
+                logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} (no slot value for {nameof(finalDestinationStopName)})");
+                return CreatePlainTextResponse(Responses.NoSlotValueFor("die Endhaltestelle"));
+            }
+            
             logger.LogDebug($"NextLineDepartureFromStop: lineNr={lineNr}, originStopName={originStopName}, finalDestinationStopName={finalDestinationStopName}");
             
             var departures = await departuresService.GetDeparturesForStopAsync(originStop, GetDeparturesForStopDefaultLimit);
             if (departures.Count <= 0)
             {
                 logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} (departures.Count <= 0)");
-                return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
+                return CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
             }
             
             var filteredDepartures = departures
@@ -119,16 +139,23 @@ namespace LinzLinienAlexaSkill.Alexa
             if (filteredDepartures.Count <= 0)
             {
                 logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} (filteredDepartures.Count <= 0)");
-                return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
+                return CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
             }
             logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} [ok]");
-            return SkillResponseUtil.CreatePlainTextResponse(Responses.NextDepartureText(originStop, filteredDepartures[0]));
+            return CreatePlainTextResponse(Responses.NextDepartureText(originStop, filteredDepartures[0]));
         }
         
         private async Task<SkillResponse> CreateResponseForDepartureByTypeRequestAsync(IntentRequest intentRequest, TransportationMean type)
         {
             logger.LogTrace($"Enter {nameof(CreateResponseForDepartureByTypeRequestAsync)}");
-            var originStopName = intentRequest.Intent.Slots["originStopName"].Value.ToLower();
+            
+            var originStopName = intentRequest.TryGetSlotValue("originStopName");
+            if (originStopName == null)
+            {
+                logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByTypeRequestAsync)} (no slot value for {nameof(originStopName)})");
+                return CreatePlainTextResponse(Responses.NoSlotValueFor("die Abfahrtshaltestelle"));
+            }
+            
             var originStop = await FindStopByNameAsync(originStopName);
             if (originStop == null)
             {
@@ -136,14 +163,20 @@ namespace LinzLinienAlexaSkill.Alexa
                 return CreateStopNotFoundResponse(originStopName);
             }
             
-            var finalDestinationStopName = intentRequest.Intent.Slots["finalDestinationStopName"].Value.ToLower();
+            var finalDestinationStopName = intentRequest.TryGetSlotValue("finalDestinationStopName");
+            if (finalDestinationStopName == null)
+            {
+                logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByTypeRequestAsync)} (no slot value for {nameof(finalDestinationStopName)})");
+                return CreatePlainTextResponse(Responses.NoSlotValueFor("die Endhaltestelle"));
+            }
+            
             logger.LogDebug($"Next{type}DepartureFromStop: originStopName={originStopName}, finalDestinationStopName={finalDestinationStopName}");
             
             var departures = await departuresService.GetDeparturesForStopAsync(originStop, GetDeparturesForStopDefaultLimit);
             if (departures.Count <= 0)
             {
                 logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByTypeRequestAsync)} (departures.Count <= 0)");
-                return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
+                return CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
             }
             
             var filteredDepartures = departures
@@ -153,16 +186,22 @@ namespace LinzLinienAlexaSkill.Alexa
             if (filteredDepartures.Count <= 0)
             {
                 logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByTypeRequestAsync)} (filteredDepartures.Count <= 0)");
-                return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
+                return CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
             }
             logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByTypeRequestAsync)} [ok]");
-            return SkillResponseUtil.CreatePlainTextResponse(Responses.NextDepartureText(originStop, filteredDepartures[0]));
+            return CreatePlainTextResponse(Responses.NextDepartureText(originStop, filteredDepartures[0]));
         }
         
         private async Task<SkillResponse> CreateResponseForDeparturesFromStopRequestAsync(IntentRequest intentRequest, uint count)
         {
             logger.LogTrace($"Enter {nameof(CreateResponseForDeparturesFromStopRequestAsync)}");
-            var originStopName = intentRequest.Intent.Slots["originStopName"].Value.ToLower();
+            var originStopName = intentRequest.TryGetSlotValue("originStopName");
+            if (originStopName == null)
+            {
+                logger.LogTrace($"Exit {nameof(CreateResponseForDeparturesFromStopRequestAsync)} (no slot value for {nameof(originStopName)})");
+                return CreatePlainTextResponse(Responses.NoSlotValueFor("die Abfahrtshaltestelle"));
+            }
+            
             var originStop = await FindStopByNameAsync(originStopName);
             if (originStop == null)
             {
@@ -180,10 +219,10 @@ namespace LinzLinienAlexaSkill.Alexa
                     response = $"{response} {Responses.DepartureText(departures[i])}";
                 }
                 logger.LogTrace($"Exit {nameof(CreateResponseForDeparturesFromStopRequestAsync)} [ok]");
-                return SkillResponseUtil.CreatePlainTextResponse(response);
+                return CreatePlainTextResponse(response);
             }
             logger.LogTrace($"Exit {nameof(CreateResponseForDeparturesFromStopRequestAsync)} (no departures)");
-            return SkillResponseUtil.CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
+            return CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
         }
 
         #endregion
@@ -194,12 +233,12 @@ namespace LinzLinienAlexaSkill.Alexa
 
         private SkillResponse CreateErrorResponse()
         {
-            return SkillResponseUtil.CreatePlainTextResponse(Responses.ErrorText);
+            return CreatePlainTextResponse(Responses.ErrorText);
         }
 
         private SkillResponse CreateStopNotFoundResponse(string stopName)
         {
-            return SkillResponseUtil.CreatePlainTextResponse(Responses.StopNotFoundText(stopName));
+            return CreatePlainTextResponse(Responses.StopNotFoundText(stopName));
         }
         
         #endregion
