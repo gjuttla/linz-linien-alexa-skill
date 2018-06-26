@@ -209,7 +209,7 @@ namespace LinzLinienAlexaSkill.Alexa
         private async Task<Stop> FindStopByNameAsync(string name)
         {
             var stops = await stopsService.FindStopsByNameAsync(name);
-            return stops.Count > 0 ? stops.First() : null;
+            return (stops != null && stops.Count > 0) ? stops.First() : null;
         }
 
         #endregion
