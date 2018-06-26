@@ -126,7 +126,7 @@ namespace LinzLinienAlexaSkill.Alexa
             logger.LogDebug($"NextLineDepartureFromStop: lineNr={lineNr}, originStopName={originStopName}, finalDestinationStopName={finalDestinationStopName}");
             
             var departures = await departuresService.GetDeparturesForStopAsync(originStop, GetDeparturesForStopDefaultLimit);
-            if (departures.Count <= 0)
+            if (departures != null && departures.Count <= 0)
             {
                 logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByLineRequestAsync)} (departures.Count <= 0)");
                 return CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
@@ -173,7 +173,7 @@ namespace LinzLinienAlexaSkill.Alexa
             logger.LogDebug($"Next{type}DepartureFromStop: originStopName={originStopName}, finalDestinationStopName={finalDestinationStopName}");
             
             var departures = await departuresService.GetDeparturesForStopAsync(originStop, GetDeparturesForStopDefaultLimit);
-            if (departures.Count <= 0)
+            if (departures != null && departures.Count <= 0)
             {
                 logger.LogTrace($"Exit {nameof(CreateResponseForDepartureByTypeRequestAsync)} (departures.Count <= 0)");
                 return CreatePlainTextResponse(Responses.NoDepartuesFoundForCriteriaText);
@@ -211,7 +211,7 @@ namespace LinzLinienAlexaSkill.Alexa
             logger.LogDebug($"NextDeparturesFromStop: originStopName={originStopName}");
             
             var departures = (await departuresService.GetDeparturesForStopAsync(originStop, GetDeparturesForStopDefaultLimit)) as List<Departure>;
-            if (departures.Count > 0 && departures.Count >= count)
+            if (departures != null && departures.Count > 0 && departures.Count >= count)
             {
                 var response = $"Hier sind die nächsten {count} Abfahrten von {originStop.Name}.";
                 for (var i = 0; i < count; ++i)
