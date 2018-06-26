@@ -5,7 +5,6 @@ using LinzLinienEfa.Domain;
 using LinzLinienEfa.Service.Common;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using Newtonsoft.Json;
 
 namespace LinzLinienAlexaSkill.Dao
 {
@@ -20,16 +19,14 @@ namespace LinzLinienAlexaSkill.Dao
             this.appConfig = options.Value;
         }
         
-        public Task<ICollection<Departure>> GetDeparturesForStopAsync(Stop stop, uint limit)
+        public async Task<ICollection<Departure>> GetDeparturesForStopAsync(Stop stop, uint limit)
         {
-            return GetDeparturesForStopAsync(stop.Id, limit);
+            return await GetDeparturesForStopAsync(stop.Id, limit);
         }
 
         public async Task<ICollection<Departure>> GetDeparturesForStopAsync(string stopId, uint limit)
         {
-            return JsonConvert.DeserializeObject<List<Departure>>(
-                await HttpClient.GetStringAsync($"{appConfig.EfaApiBaseUrl}{appConfig.DeparturesEndpoint}{stopId}"), 
-                JsonSerializerSettings);
+            return await GetJsonListAsync<Departure>($"{appConfig.EfaApiBaseUrl}{appConfig.DeparturesEndpoint}{stopId}");
         }
     }
 }
