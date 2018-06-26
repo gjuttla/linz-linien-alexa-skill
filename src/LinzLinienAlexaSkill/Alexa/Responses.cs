@@ -8,6 +8,11 @@ namespace LinzLinienAlexaSkill.Alexa
         public static readonly string ErrorText = "Bei der Anfrage ist ein Fehler aufgetreten.";
         public static readonly string NoDepartuesFoundForCriteriaText = "Ich habe zu diesen Kriterien leider keine Abfahrten gefunden.";
 
+        public static string NoSlotValueFor(string slotUsage)
+        {
+            return $"Ungültiger Wert für {slotUsage}.";
+        }
+        
         public static string StopNotFoundText(string stopName)
         {
             return $"Ich habe die Haltestelle {stopName} leider nicht gefunden.";
